@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const { values } = require('sequelize/types/lib/operators');
 const { User } = require('../../models');
 
 router.post('/', async (req, res) => {
@@ -14,11 +13,11 @@ router.post('/', async (req, res) => {
 
     req.session.save(() => {
       // TODO: SET USERID IN REQUEST SESSION TO ID RETURNED FROM DATABASE
-      req.session.user_id = newUser.id;
+      req.session.userId = newUser.id;
       // TODO: SET USERNAME IN REQUEST SESSION TO USERNAME RETURNED FROM DATABASE
       req.session.username = newUser.username;
       // TODO: SET LOGGEDIN TO TRUE IN REQUEST SESSION
-      req.session.logged_in = true;
+      req.session.loggedIn = true;
 
       res.json(newUser);
     });
@@ -34,7 +33,7 @@ router.post('/login', async (req, res) => {
         username: req.body.username,
       },
     });
-
+    
     if (!user) {
       res.status(400).json({ message: 'No user account found!' });
       return;
@@ -48,13 +47,15 @@ router.post('/login', async (req, res) => {
     }
 
     req.session.save(() => {
+      console.log("Logging In")
       // TODO: SET USERID IN REQUEST SESSION TO ID RETURNED FROM DATABASE
-      req.session.user_id = user.id;
+      req.session.userId = user.id;
       // TODO: SET USERNAME IN REQUEST SESSION TO USERNAME RETURNED FROM DATABASE
       req.session.username = user.username;
       // TODO: SET LOGGEDIN TO TRUE IN REQUEST SESSION
-      req.session.logged_in = true;
+      req.session.loggedIn = true;
       res.json({ user, message: 'You are now logged in!' });
+
     });
   } catch (err) {
     res.status(400).json({ message: 'No user account found!' });
